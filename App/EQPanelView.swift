@@ -119,11 +119,15 @@ struct EQPanelView: View {
     }
 
     private var footer: some View {
-        HStack {
+        HStack(spacing: 12) {
             Text("double-click a fader to zero it")
                 .font(Theme.label)
                 .foregroundStyle(Theme.textDim.opacity(0.7))
             Spacer()
+            Button("Import AutoEQ…") { importAutoEQ() }
+                .buttonStyle(.plain)
+                .font(Theme.label)
+                .foregroundStyle(Theme.textDim)
             Button("Quit") { NSApplication.shared.terminate(nil) }
                 .buttonStyle(.plain)
                 .font(Theme.label)
@@ -131,5 +135,17 @@ struct EQPanelView: View {
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 8)
+    }
+
+    private func importAutoEQ() {
+        let panel = NSOpenPanel()
+        panel.allowedContentTypes = [.plainText]
+        panel.allowsMultipleSelection = false
+        panel.message = "Choose an AutoEQ ParametricEQ export for your headphones."
+        // The menu-bar popover closes the moment focus moves, so the panel has to be
+        // brought to the front deliberately.
+        NSApp.activate(ignoringOtherApps: true)
+        guard panel.runModal() == .OK, let url = panel.url else { return }
+        model.importAutoEQ(from: url)
     }
 }

@@ -102,4 +102,28 @@ final class AppModel: ObservableObject {
     func reset() {
         apply(preset: .flat())
     }
+
+    /// Load an AutoEQ ParametricEQ export — the measured correction curve published for
+    /// a specific headphone. Bands beyond the engine's ceiling are dropped rather than
+    /// silently ignored, and the user is told.
+    func importAutoEQ(from url: URL) {
+        do {
+            let text = try String(contentsOf: url, encoding: .utf8)
+            let name = url.deletingPathExtension().lastPathComponent
+            var imported = try AutoEQImport.profile(from: text, name: name)
+
+            if imported.bands.count > EQEngine.maxBands {
+                let dropped = imported.bands.count - EQEngine.maxBands
+                imported.bands = Array(imported.bands.prefix(EQEngine.maxBands))
+                errorMessage = "Loaded \(name) — \(dropped) band\(dropped == 1 ? "" : "s") beyond the \(EQEngine.maxBands)-band limit were dropped."
+            } else {
+                errorMessage = nil
+            }
+
+            profile = imported
+            profileChanged()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
 }
