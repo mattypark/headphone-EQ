@@ -6,7 +6,7 @@ import ToneCore
 ///
 /// The trick is measuring twice. Absolute levels depend on the track, the device, the
 /// volume and the room; the *difference* between a flat pass and a preset pass depends
-/// on nothing but the equaliser. Same signal both times, so the comparison is exact.
+/// on nothing but the equalizer. Same signal both times, so the comparison is exact.
 enum Measurement {
     static let sampleRate = 48_000.0
 

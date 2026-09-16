@@ -7,7 +7,7 @@ import ToneCore
 /// System-wide EQ with nothing to install.
 ///
 /// Uses the Core Audio process tap API (macOS 14.2+): tap everything the machine is
-/// playing, mute the original path, run it through the equaliser, and hand it to the
+/// playing, mute the original path, run it through the equalizer, and hand it to the
 /// real output device. An aggregate device ties the two ends together — the tap is its
 /// input, the headphone is its output.
 ///
