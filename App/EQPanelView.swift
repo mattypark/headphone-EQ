@@ -4,7 +4,10 @@ import ToneCore
 struct EQPanelView: View {
     @ObservedObject var model: AppModel
 
-    private let range = -12.0 ... 12.0
+    // Twelve dB was not enough to be dramatic on a shelf that tapers. Eighteen gives a
+    // fader room to say something.
+    private let range = -18.0 ... 18.0
+    private let scaleSteps: [Double] = [18, 12, 6, 0, -6, -12, -18]
 
     var body: some View {
         VStack(spacing: 0) {
@@ -16,17 +19,27 @@ struct EQPanelView: View {
             }
 
             ResponseCurve(profile: model.profile, range: range)
-                .frame(height: 58)
+                .frame(height: 72)
                 .padding(.horizontal, 14)
                 .padding(.top, 12)
 
             faders
+
+            BassMacro(
+                profile: $model.profile,
+                range: range,
+                onChange: model.profileChanged
+            )
+            .padding(.horizontal, 16)
+            .padding(.top, 2)
+            .padding(.bottom, 12)
+
             presets
 
             Divider().overlay(Theme.hairline)
             footer
         }
-        .frame(width: 430)
+        .frame(width: 468)
         .background(Theme.panel)
         .preferredColorScheme(.dark)
     }
@@ -80,7 +93,8 @@ struct EQPanelView: View {
     }
 
     private var faders: some View {
-        HStack(spacing: 4) {
+        HStack(alignment: .top, spacing: 2) {
+            FaderScale(range: range, steps: scaleSteps)
             ForEach($model.profile.bands) { $band in
                 BandFader(
                     frequency: band.frequency,
@@ -90,14 +104,15 @@ struct EQPanelView: View {
                 )
             }
         }
-        .padding(.horizontal, 14)
-        .padding(.top, 10)
-        .padding(.bottom, 6)
+        .padding(.horizontal, 12)
+        .padding(.top, 12)
+        .padding(.bottom, 8)
     }
 
     private var presets: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 6) {
+                Color.clear.frame(width: 2)
                 ForEach(Presets.all) { preset in
                     let isCurrent = preset.name == model.profile.name
                     Button(preset.name) { model.apply(preset: preset) }
