@@ -1,0 +1,28 @@
+# Xcode / SwiftPM
+.build/
+DerivedData/
+*.xcodeproj/
+*.xcworkspace/
+!*.xcworkspace/contents.xcworkspacedata
+.swiftpm/
+Packages/*/.build/
+
+# Build products
+build/
+*.app
+*.dmg
+*.o
+*.dSYM/
+
+# Stage 0 spike binaries (source is kept, products are not)
+spike/probe
+spike/Probe.app/
+
+# macOS
+.DS_Store
+*.swp
+
+# Secrets — never commit real values
+.env
+.env.*
+!.env.example
