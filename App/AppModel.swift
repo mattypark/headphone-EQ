@@ -15,6 +15,7 @@ final class AppModel: ObservableObject {
 
     private let transport = ProcessTapTransport()
     private let store = ProfileStore()
+    private let deviceWatcher = DeviceWatcher()
     private var saveTask: Task<Void, Never>?
 
     init() {
@@ -22,6 +23,25 @@ final class AppModel: ObservableObject {
         deviceName = device
         profile = ProfileStore().profile(forDevice: device)
         transport.setProfile(profile)
+
+        deviceWatcher.onChange = { [weak self] name in
+            self?.outputDeviceChanged(to: name)
+        }
+        deviceWatcher.start()
+    }
+
+    /// The tap and aggregate device are bound to one output device, so a switch means
+    /// tearing the pipeline down and building it again — and swapping in whatever curve
+    /// belongs to the headphone that just arrived.
+    private func outputDeviceChanged(to name: String) {
+        let wasEnabled = isEnabled
+        if wasEnabled { disable() }
+
+        deviceName = name
+        profile = store.profile(forDevice: name)
+        transport.setProfile(profile)
+
+        if wasEnabled { enable() }
     }
 
     /// Headroom the current profile costs, for the readout under the faders.
