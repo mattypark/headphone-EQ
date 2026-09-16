@@ -2,7 +2,7 @@ import SwiftUI
 
 /// The look: a piece of studio hardware, not a settings pane.
 ///
-/// Dark graphite panel, one warm accent for boost and one cool one for cut. Colour
+/// Dark graphite panel, one warm accent for boost and one cool one for cut. Color
 /// carries meaning here — a fader's tint tells you which direction it is pushing
 /// before you read the number.
 enum Theme {

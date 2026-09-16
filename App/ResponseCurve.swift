@@ -24,7 +24,7 @@ struct ResponseCurve: View {
                 step == 0 ? path.move(to: point) : path.addLine(to: point)
             }
 
-            // Centre line first, so the curve reads as a deviation from flat.
+            // Center line first, so the curve reads as a deviation from flat.
             var zero = Path()
             zero.move(to: CGPoint(x: 0, y: size.height / 2))
             zero.addLine(to: CGPoint(x: size.width, y: size.height / 2))

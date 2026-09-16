@@ -29,7 +29,7 @@ final class AppModel: ObservableObject {
         }
         deviceWatcher.start()
 
-        // An equaliser you have to switch on every morning is an equaliser you stop
+        // An equalizer you have to switch on every morning is an equalizer you stop
         // using. Come back the way it was left.
         if UserDefaults.standard.bool(forKey: Self.enabledKey) {
             enable()

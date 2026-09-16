@@ -43,7 +43,7 @@ struct EQPanelView: View {
                     .font(Theme.title)
                     .foregroundStyle(Theme.text)
                 Text(model.isEnabled
-                     ? String(format: "equalising · +%.0f ms · preamp %.1f dB", model.latencyMilliseconds, model.preampDB)
+                     ? String(format: "equalizing · +%.0f ms · preamp %.1f dB", model.latencyMilliseconds, model.preampDB)
                      : "off · system audio untouched")
                     .font(Theme.label)
                     .foregroundStyle(Theme.textDim)

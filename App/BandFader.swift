@@ -41,7 +41,7 @@ struct BandFader: View {
 
     private var track: some View {
         ZStack(alignment: .top) {
-            // Tick marks every 3 dB, with the centre line picked out — the visual
+            // Tick marks every 3 dB, with the center line picked out — the visual
             // reference that tells you how far from flat you have wandered.
             VStack(spacing: 0) {
                 ForEach(0 ..< 9) { index in
@@ -57,7 +57,7 @@ struct BandFader: View {
                 .fill(Theme.track)
                 .frame(width: 3, height: trackHeight)
 
-            // Fill from centre toward the knob, so the sign of the gain is visible
+            // Fill from center toward the knob, so the sign of the gain is visible
             // before the number is read.
             Capsule()
                 .fill(Theme.tint(forGain: gain).opacity(0.75))
@@ -92,14 +92,14 @@ struct BandFader: View {
             .offset(y: knobOffset)
     }
 
-    /// Vertical position of the knob centre, measured from the top of the track.
+    /// Vertical position of the knob center, measured from the top of the track.
     private var knobOffset: CGFloat {
         let usable = trackHeight - knobHeight
-        let normalised = (gain - range.lowerBound) / (range.upperBound - range.lowerBound)
-        return usable * (1 - normalised)
+        let normalized = (gain - range.lowerBound) / (range.upperBound - range.lowerBound)
+        return usable * (1 - normalized)
     }
 
-    /// Distance from the centre line for the fill capsule.
+    /// Distance from the center line for the fill capsule.
     private func offset(for gain: Double) -> CGFloat {
         let half = trackHeight / 2
         return -CGFloat(gain / range.upperBound) * half
