@@ -22,6 +22,7 @@ public final class ProcessTapTransport: AudioTransport, @unchecked Sendable {
     private var aggregateID = AudioObjectID(kAudioObjectUnknown)
     private var ioProcID: AudioDeviceIOProcID?
     private var tapUUID = UUID()
+    private let aggregateUID = UUID().uuidString
 
     public private(set) var isRunning = false
     public private(set) var latencyMilliseconds: Double = 0
@@ -38,6 +39,9 @@ public final class ProcessTapTransport: AudioTransport, @unchecked Sendable {
     private var captureCount = 0
     private var isCapturing = false
 
+    /// Small enough to feel immediate, large enough not to glitch on a busy machine.
+    static let preferredBufferFrames: UInt32 = 256
+
     public init() {}
 
     deinit { stop() }
@@ -53,10 +57,14 @@ public final class ProcessTapTransport: AudioTransport, @unchecked Sendable {
 
         outputDeviceName = CA.deviceName(outputDevice) ?? "Output"
         let sampleRate = CA.nominalSampleRate(outputDevice)
-        let bufferFrames = CA.bufferFrameSize(outputDevice)
 
         try createTap()
         try createAggregateDevice(outputUID: outputUID)
+
+        // Latency is two buffers, and the default 512 frames makes that 21 ms — enough
+        // to notice on video. Ask for less; the device may refuse, in which case we
+        // simply report what it gave us.
+        let bufferFrames = CA.setBufferFrameSize(aggregateID, frames: Self.preferredBufferFrames)
 
         let format = CA.tapFormat(tapID)
         let channels = Int(format?.mChannelsPerFrame ?? 2)
@@ -127,7 +135,10 @@ public final class ProcessTapTransport: AudioTransport, @unchecked Sendable {
     private func createAggregateDevice(outputUID: String) throws {
         let description: [String: Any] = [
             kAudioAggregateDeviceNameKey: "headphone-EQ Output",
-            kAudioAggregateDeviceUIDKey: "com.matthewpark.headphoneeq.aggregate",
+            // Unique per instance: a hardcoded UID collides with any other copy of the
+            // app — or a stale device left behind by a crash — and Core Audio answers
+            // that with a flat 'nope'.
+            kAudioAggregateDeviceUIDKey: "com.matthewpark.headphoneeq.aggregate.\(aggregateUID)",
             kAudioAggregateDeviceMainSubDeviceKey: outputUID,
             kAudioAggregateDeviceIsPrivateKey: true,
             kAudioAggregateDeviceIsStackedKey: false,

@@ -69,6 +69,18 @@ public enum CA {
         value(deviceID, address(kAudioDevicePropertyBufferFrameSize), default: 512)
     }
 
+    /// Ask a device for a smaller buffer. Returns whatever it settled on — devices are
+    /// free to refuse, and a refusal is not an error, just more latency.
+    @discardableResult
+    static func setBufferFrameSize(_ deviceID: AudioObjectID, frames: UInt32) -> UInt32 {
+        var address = self.address(kAudioDevicePropertyBufferFrameSize)
+        var requested = frames
+        AudioObjectSetPropertyData(
+            deviceID, &address, 0, nil, UInt32(MemoryLayout<UInt32>.size), &requested
+        )
+        return bufferFrameSize(deviceID)
+    }
+
     /// Audio object representing this process, needed to exclude ourselves from a
     /// global tap — otherwise the tap hears our own output and the room folds in on
     /// itself.
