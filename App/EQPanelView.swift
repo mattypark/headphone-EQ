@@ -124,6 +124,15 @@ struct EQPanelView: View {
                 .font(Theme.label)
                 .foregroundStyle(Theme.textDim.opacity(0.7))
             Spacer()
+            Toggle("Start at login", isOn: Binding(
+                get: { LoginItem.isEnabled },
+                set: { LoginItem.set($0) }
+            ))
+            .toggleStyle(.checkbox)
+            .controlSize(.mini)
+            .font(Theme.label)
+            .foregroundStyle(Theme.textDim)
+
             Button("Import AutoEQ…") { importAutoEQ() }
                 .buttonStyle(.plain)
                 .font(Theme.label)
