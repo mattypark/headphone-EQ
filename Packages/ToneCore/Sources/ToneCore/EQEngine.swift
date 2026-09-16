@@ -1,7 +1,7 @@
 import Foundation
 import os.lock
 
-/// The real-time equaliser: a cascade of biquads per channel, plus preamp and a
+/// The real-time equalizer: a cascade of biquads per channel, plus preamp and a
 /// safety limiter.
 ///
 /// Everything the audio thread touches is preallocated. `process` performs no

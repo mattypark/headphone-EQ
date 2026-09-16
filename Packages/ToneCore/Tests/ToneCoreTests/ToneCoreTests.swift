@@ -4,7 +4,7 @@ import XCTest
 final class BiquadTests: XCTestCase {
     let sampleRate = 48_000.0
 
-    func testPeakingHitsItsGainAtCentreFrequency() {
+    func testPeakingHitsItsGainAtCenterFrequency() {
         for gain in [-12.0, -6, -3, 3, 6, 12] {
             let band = EQBand(type: .peaking, frequency: 1_000, gain: gain, q: 1.0)
             let measured = BiquadCoefficients(band: band, sampleRate: sampleRate)
@@ -129,7 +129,7 @@ final class EQEngineTests: XCTestCase {
         let real = s1 - s2 * cos(omega)
         let imaginary = s2 * sin(omega)
         let magnitude = sqrt(real * real + imaginary * imaginary)
-        // Normalise out the probe level so the result reads as filter gain in dB.
+        // Normalize out the probe level so the result reads as filter gain in dB.
         return 20 * log10(max(magnitude, 1e-12)) - 20 * log10(Double(Self.probeAmplitude))
     }
 

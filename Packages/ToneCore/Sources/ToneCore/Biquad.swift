@@ -1,6 +1,6 @@
 import Foundation
 
-/// Second-order section coefficients, normalised so `a0 == 1`.
+/// Second-order section coefficients, normalized so `a0 == 1`.
 ///
 /// Difference equation:
 /// `y[n] = b0·x[n] + b1·x[n-1] + b2·x[n-2] − a1·y[n-1] − a2·y[n-2]`
@@ -22,10 +22,10 @@ public struct BiquadCoefficients: Sendable, Equatable {
     }
 
     /// Robert Bristow-Johnson's audio EQ cookbook formulas. These are the same
-    /// coefficients every mixing desk and every other equaliser uses; deviating from
+    /// coefficients every mixing desk and every other equalizer uses; deviating from
     /// them is how an EQ ends up sounding subtly wrong.
     public init(band: EQBand, sampleRate: Double) {
-        // A filter centred above Nyquist is meaningless — pass audio through untouched
+        // A filter centered above Nyquist is meaningless — pass audio through untouched
         // rather than producing an unstable section.
         let nyquist = sampleRate / 2
         guard band.frequency > 0, band.frequency < nyquist, sampleRate > 0 else {

@@ -3,7 +3,7 @@ import Foundation
 /// Works out how far the signal must be turned down before EQ is applied so that
 /// boosting bass cannot push the output past full scale.
 ///
-/// This is the difference between an equaliser that sounds better and one that just
+/// This is the difference between an equalizer that sounds better and one that just
 /// sounds louder and then crackles.
 public enum Headroom {
     /// Log-spaced probe points from 20 Hz to 20 kHz. Dense enough that a narrow

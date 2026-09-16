@@ -18,7 +18,7 @@ public enum BandType: String, Codable, Sendable, CaseIterable {
 public struct EQBand: Codable, Sendable, Equatable, Identifiable {
     public var id: UUID
     public var type: BandType
-    /// Centre (peaking) or corner (shelf/pass) frequency in Hz.
+    /// Center (peaking) or corner (shelf/pass) frequency in Hz.
     public var frequency: Double
     /// Gain in dB. Ignored by `highPass` and `lowPass`.
     public var gain: Double
@@ -79,7 +79,7 @@ public struct EQProfile: Codable, Sendable, Equatable, Identifiable {
         bands.filter { $0.isEnabled }
     }
 
-    /// The ten-band layout the UI ships with — ISO octave centres, the same spacing
+    /// The ten-band layout the UI ships with — ISO octave centers, the same spacing
     /// every hardware graphic EQ has used for forty years.
     public static let standardFrequencies: [Double] = [
         31.25, 62.5, 125, 250, 500, 1_000, 2_000, 4_000, 8_000, 16_000,
