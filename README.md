@@ -25,9 +25,9 @@ decided they should sound, in every app, forever. This fixes that.
 | 0 · Transport spike | done — see [`docs/SPIKE.md`](docs/SPIKE.md) |
 | 1 · Scaffold + repo | done |
 | 2 · `ToneCore` DSP + tests | done — 18/18 passing |
-| 3 · Core Audio tap transport | next |
-| 4 · UI | |
-| 5 · Presets + AutoEQ import | DSP side done, UI pending |
+| 3 · Core Audio tap transport | done — measured to 0.14 dB of the target curve |
+| 4 · Menu-bar app | done |
+| 5 · Presets + AutoEQ import | presets done; AutoEQ import needs a UI entry point |
 | 6 · Sony adapter | blocked on confirming the RFCOMM open |
 | 7 · AirPods adapter | **cancelled** — macOS won't grant the channel |
 | 8 · Polish | |
@@ -44,11 +44,31 @@ Full evidence in [`docs/SPIKE.md`](docs/SPIKE.md).
 it can't reach the AirPods channel, and the sandbox has no cross-app audio tap. macOS
 only, on purpose.
 
-## Build
+## Run it
 
 ```sh
-cd Packages/ToneCore && swift test    # 18 tests, no hardware needed
+xcodegen generate
+xcodebuild -project HeadphoneEQ.xcodeproj -scheme HeadphoneEQ -configuration Debug \
+           -derivedDataPath build build
+open build/Build/Products/Debug/HeadphoneEQ.app
 ```
+
+It lives in the menu bar — click the fader icon, flip the switch on. macOS will ask for
+audio permission the first time, because reading what the machine is playing is exactly
+what a process tap does.
+
+## Build and verify
+
+```sh
+cd Packages/ToneCore
+swift test                                   # 18 tests, no hardware needed
+swift run eqcli presets                      # presets and their headroom
+swift run eqcli measure --preset "Bass Boost"  # end-to-end measurement, real hardware
+```
+
+`measure` is the honest test: it plays a multitone through the actual output device
+twice, flat and then with the preset, and reports the difference against what the
+profile promises. On an AirPods Pro it lands within 0.14 dB across all ten bands.
 
 `ToneCore` is deliberately free of Core Audio and Bluetooth — it's pure DSP, so the part
 that must be correct is the part that's easiest to test.

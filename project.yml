@@ -1,0 +1,45 @@
+name: HeadphoneEQ
+options:
+  bundleIdPrefix: com.matthewpark.headphoneeq
+  deploymentTarget:
+    macOS: "14.2"
+  createIntermediateGroups: true
+
+packages:
+  ToneCore:
+    path: Packages/ToneCore
+
+targets:
+  HeadphoneEQ:
+    type: application
+    platform: macOS
+    sources:
+      - App
+    dependencies:
+      - package: ToneCore
+        product: ToneCore
+      - package: ToneCore
+        product: ToneAudio
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.matthewpark.headphoneeq
+        MARKETING_VERSION: "0.1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        SWIFT_VERSION: "6.0"
+        ENABLE_HARDENED_RUNTIME: YES
+        CODE_SIGN_IDENTITY: "-"
+        CODE_SIGN_STYLE: Automatic
+        INFOPLIST_KEY_LSUIElement: YES
+        INFOPLIST_KEY_NSHumanReadableCopyright: ""
+    info:
+      path: App/Info.plist
+      properties:
+        CFBundleName: headphone-EQ
+        LSUIElement: true
+        LSMinimumSystemVersion: "14.2"
+        NSAudioCaptureUsageDescription: >-
+          headphone-EQ reads the audio your Mac is already playing so it can equalise it
+          before it reaches your headphones. Nothing is recorded or sent anywhere.
+        NSMicrophoneUsageDescription: >-
+          Required by macOS to process system audio. headphone-EQ never uses your
+          microphone.
