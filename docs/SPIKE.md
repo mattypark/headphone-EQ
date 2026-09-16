@@ -28,7 +28,7 @@ either; the request is simply never satisfied.
 This is consistent with LibrePods existing only for Linux and Android, where the OS is
 not already holding the AACP channel.
 
-**Consequence:** Stage 7 (`AirPodsAdapter`) is cancelled. AirPods are served by the
+**Consequence:** Stage 7 (`AirPodsAdapter`) is canceled. AirPods are served by the
 pipeline engine, exactly like any other headphone. Worth revisiting only if Apple ever
 publishes an accessory API — the opcodes (`0x0063` Custom EQ, `0x0053` Headphone
 Accommodation) are known and the adapter would be small.

@@ -36,7 +36,7 @@ targets:
         CFBundleName: headphone-EQ
         LSMinimumSystemVersion: "14.2"
         NSAudioCaptureUsageDescription: >-
-          headphone-EQ reads the audio your Mac is already playing so it can equalise it
+          headphone-EQ reads the audio your Mac is already playing so it can equalize it
           before it reaches your headphones. Nothing is recorded or sent anywhere.
         NSMicrophoneUsageDescription: >-
           Required by macOS to process system audio. headphone-EQ never uses your

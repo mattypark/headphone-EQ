@@ -1,14 +1,14 @@
 # headphone-EQ
 
-A system-wide equaliser for macOS, and a control app for headphones that have their own
+A system-wide equalizer for macOS, and a control app for headphones that have their own
 DSP — the thing Sony ships for their headphones and nobody ships for everything else.
 
-macOS has no built-in equaliser. So on a Mac, your AirPods sound exactly the way Apple
+macOS has no built-in equalizer. So on a Mac, your AirPods sound exactly the way Apple
 decided they should sound, in every app, forever. This fixes that.
 
 ## What it does
 
-- **Pipeline EQ** — a 10-band parametric equaliser across all system audio. Works with
+- **Pipeline EQ** — a 10-band parametric equalizer across all system audio. Works with
   any headphone: AirPods, Sony, wired, anything the Mac can output to.
 - **Native EQ** — where a headphone exposes its own DSP over Bluetooth, drive that
   instead: zero latency, and the setting lives in the headphone.
@@ -29,7 +29,7 @@ decided they should sound, in every app, forever. This fixes that.
 | 4 · Menu-bar app | done |
 | 5 · Presets + AutoEQ import | presets done; AutoEQ import needs a UI entry point |
 | 6 · Sony adapter | blocked on confirming the RFCOMM open |
-| 7 · AirPods adapter | **cancelled** — macOS won't grant the channel |
+| 7 · AirPods adapter | **canceled** — macOS won't grant the channel |
 | 8 · Polish | |
 
 ## What was learned the hard way
