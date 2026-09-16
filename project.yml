@@ -29,13 +29,11 @@ targets:
         ENABLE_HARDENED_RUNTIME: YES
         CODE_SIGN_IDENTITY: "-"
         CODE_SIGN_STYLE: Automatic
-        INFOPLIST_KEY_LSUIElement: YES
         INFOPLIST_KEY_NSHumanReadableCopyright: ""
     info:
       path: App/Info.plist
       properties:
         CFBundleName: headphone-EQ
-        LSUIElement: true
         LSMinimumSystemVersion: "14.2"
         NSAudioCaptureUsageDescription: >-
           headphone-EQ reads the audio your Mac is already playing so it can equalise it

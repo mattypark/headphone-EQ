@@ -5,26 +5,24 @@ struct HeadphoneEQApp: App {
     @StateObject private var model = AppModel()
 
     var body: some Scene {
+        // The main window. A menu-bar-only app is invisible to anyone who does not
+        // already know it is there, so the panel gets a real window as well.
+        Window("headphone-EQ", id: "panel") {
+            EQPanelView(model: model)
+                .fixedSize()
+        }
+        .windowResizability(.contentSize)
+        .defaultPosition(.center)
+        .commandsRemoved()
+
+        // And the same panel from the menu bar, for once it is familiar.
         MenuBarExtra {
             EQPanelView(model: model)
         } label: {
-            // A fader silhouette rather than a generic speaker — recognisable in a
-            // crowded menu bar at a glance.
-            Image(systemName: model.isEnabled ? "slider.vertical.3" : "slider.vertical.3")
+            Image(systemName: "slider.vertical.3")
                 .symbolRenderingMode(.hierarchical)
                 .opacity(model.isEnabled ? 1 : 0.55)
         }
         .menuBarExtraStyle(.window)
-
-        // Development aid: the menu-bar popover cannot be opened programmatically, so
-        // `HEADPHONE_EQ_PANEL_WINDOW=1` puts the same panel in an ordinary window for
-        // screenshots and layout work.
-        WindowGroup("Panel") {
-            if ProcessInfo.processInfo.environment["HEADPHONE_EQ_PANEL_WINDOW"] == "1" {
-                EQPanelView(model: model)
-            }
-        }
-        .defaultSize(width: 430, height: 420)
-        .windowResizability(.contentSize)
     }
 }

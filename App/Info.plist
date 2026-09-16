@@ -20,8 +20,6 @@
 	<string>1</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>14.2</string>
-	<key>LSUIElement</key>
-	<true/>
 	<key>NSAudioCaptureUsageDescription</key>
 	<string>headphone-EQ reads the audio your Mac is already playing so it can equalise it before it reaches your headphones. Nothing is recorded or sent anywhere.</string>
 	<key>NSMicrophoneUsageDescription</key>
