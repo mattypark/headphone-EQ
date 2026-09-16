@@ -28,14 +28,26 @@ final class AppModel: ObservableObject {
             self?.outputDeviceChanged(to: name)
         }
         deviceWatcher.start()
+
+        // An equaliser you have to switch on every morning is an equaliser you stop
+        // using. Come back the way it was left.
+        if UserDefaults.standard.bool(forKey: Self.enabledKey) {
+            enable()
+        }
     }
+
+    private static let enabledKey = "transport.enabled"
 
     /// The tap and aggregate device are bound to one output device, so a switch means
     /// tearing the pipeline down and building it again — and swapping in whatever curve
     /// belongs to the headphone that just arrived.
     private func outputDeviceChanged(to name: String) {
         let wasEnabled = isEnabled
-        if wasEnabled { disable() }
+        if wasEnabled {
+            transport.stop()
+            isEnabled = false
+            latencyMilliseconds = 0
+        }
 
         deviceName = name
         profile = store.profile(forDevice: name)
@@ -61,6 +73,7 @@ final class AppModel: ObservableObject {
             latencyMilliseconds = transport.latencyMilliseconds
             isEnabled = true
             errorMessage = nil
+            UserDefaults.standard.set(true, forKey: Self.enabledKey)
         } catch {
             errorMessage = error.localizedDescription
             isEnabled = false
@@ -71,6 +84,7 @@ final class AppModel: ObservableObject {
         transport.stop()
         isEnabled = false
         latencyMilliseconds = 0
+        UserDefaults.standard.set(false, forKey: Self.enabledKey)
     }
 
     /// Called continuously while a fader is dragged, so it must stay cheap: push to the
