@@ -85,11 +85,23 @@ public struct EQProfile: Codable, Sendable, Equatable, Identifiable {
         31.25, 62.5, 125, 250, 500, 1_000, 2_000, 4_000, 8_000, 16_000,
     ]
 
+    /// Bandwidth for the ten-band layout. Octave-spaced bands want roughly 1.4 — wide
+    /// enough that neighbours join into a smooth curve, narrow enough that a fader
+    /// still means what its label says.
+    public static let standardQ = 1.41
+
     /// A flat ten-band profile, ready to be dragged.
     public static func flat(name: String = "Flat") -> EQProfile {
+        tenBand(name: name, gains: Array(repeating: 0, count: standardFrequencies.count))
+    }
+
+    /// Builds a profile straight from ten fader positions.
+    public static func tenBand(name: String, gains: [Double]) -> EQProfile {
         EQProfile(
             name: name,
-            bands: standardFrequencies.map { EQBand(frequency: $0) }
+            bands: zip(standardFrequencies, gains).map { frequency, gain in
+                EQBand(frequency: frequency, gain: gain, q: standardQ)
+            }
         )
     }
 }

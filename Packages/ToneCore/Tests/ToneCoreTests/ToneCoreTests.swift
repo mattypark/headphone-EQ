@@ -58,11 +58,33 @@ final class BiquadTests: XCTestCase {
 final class HeadroomTests: XCTestCase {
     let sampleRate = 48_000.0
 
-    func testBoostingProducesNegativePreamp() {
+    func testModestBoostsCostNoVolume() {
+        // The whole point of free headroom: a boost inside it is spent, not refunded,
+        // so the listener hears more bass rather than less music.
+        let gentle = EQProfile.tenBand(name: "Gentle", gains: [5, 4, 2, 0, 0, 0, 0, 0, 0, 0])
+        XCTAssertEqual(Headroom.preampDB(for: gentle, sampleRate: sampleRate), 0, accuracy: 0.01)
+    }
+
+    func testOnlyBoostBeyondTheFreeHeadroomIsCompensated() {
         let preamp = Headroom.preampDB(for: Presets.bassBoost, sampleRate: sampleRate)
-        XCTAssertLessThan(preamp, 0)
-        // Bass Boost peaks at +6 dB, so the preamp should sit just below -6.
-        XCTAssertEqual(preamp, -6.3, accuracy: 0.6)
+        let peak = Headroom.peakGainDB(of: Presets.bassBoost, sampleRate: sampleRate)
+
+        XCTAssertGreaterThan(peak, Headroom.freeHeadroomDB, "preset should be loud enough to exceed the free headroom")
+        XCTAssertEqual(preamp, -(peak - Headroom.freeHeadroomDB + 0.3), accuracy: 0.01)
+        // And crucially the boost survives: most of it still reaches the listener.
+        XCTAssertGreaterThan(peak + preamp, 6, "the audible boost was compensated away")
+    }
+
+    func testEveryBoostingPresetStaysAudible() {
+        for preset in Presets.all {
+            let peak = Headroom.peakGainDB(of: preset, sampleRate: sampleRate)
+            guard peak > 1 else { continue }
+            let net = peak + Headroom.preampDB(for: preset, sampleRate: sampleRate)
+            XCTAssertGreaterThanOrEqual(
+                net, min(peak, Headroom.freeHeadroomDB) - 0.4,
+                "\(preset.name) boosts \(peak) dB but only \(net) dB reaches the listener"
+            )
+        }
     }
 
     func testCutOnlyProfileKeepsFullVolume() {

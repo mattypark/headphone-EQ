@@ -44,16 +44,27 @@ public enum Headroom {
         }
     }
 
-    /// Preamp in dB for a profile — negative when the profile boosts anything.
+    /// Boost this profile is allowed to take without paying for it in preamp.
+    ///
+    /// Compensating a boost one-for-one is textbook-correct and perceptually useless:
+    /// a +10 dB bass lift with a -10 dB preamp leaves the bass where it was and drops
+    /// everything else, so the music just gets quieter. Loudness is the dominant cue,
+    /// so the first several dB of boost are spent rather than refunded, and the
+    /// limiter catches what lands over the top.
+    public static let freeHeadroomDB = 8.0
+
+    /// Preamp in dB for a profile — negative only once a profile boosts past the free
+    /// headroom.
     public static func preampDB(for profile: EQProfile, sampleRate: Double) -> Double {
         switch profile.preampMode {
         case .manual:
             return profile.manualPreamp
         case .automatic:
-            // A hair of extra room, because inter-sample peaks sit slightly above
-            // anything a per-sample measurement can see.
             let peak = peakGainDB(of: profile, sampleRate: sampleRate)
-            return peak > 0 ? -(peak + 0.3) : 0
+            let excess = peak - freeHeadroomDB
+            // The extra 0.3 dB covers inter-sample peaks, which sit slightly above
+            // anything a per-sample measurement can see.
+            return excess > 0 ? -(excess + 0.3) : 0
         }
     }
 }

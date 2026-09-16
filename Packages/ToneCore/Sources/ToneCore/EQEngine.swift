@@ -42,7 +42,11 @@ public final class EQEngine: @unchecked Sendable {
     private var bands: [EQBand] = []
 
     /// Above this the limiter starts bending peaks instead of letting them clip.
-    private let limiterThreshold: Float = 0.85
+    ///
+    /// Deliberately low with a long tanh knee, so loud bass meets gentle saturation
+    /// rather than a hard ceiling. Saturation adds harmonics, and harmonics read as
+    /// *more* bass, not less — the opposite of what a brickwall does.
+    private let limiterThreshold: Float = 0.70
 
     public init(sampleRate: Double = 48_000, channelCount: Int = 2) {
         self.sampleRate = sampleRate
